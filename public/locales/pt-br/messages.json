@@ -1,0 +1,12 @@
+{
+  "example": {
+    "title": "Titulo",
+    "delete": {
+      "success": "Exclusão bem sucedida",
+      "error": "Erro ao excluir"
+    }
+  },
+  "homePage": {
+    "button": "Mudar tema"
+  }
+}

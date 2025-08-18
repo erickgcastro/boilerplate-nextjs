@@ -1,0 +1,6 @@
+{
+  "alert": {
+    "title": "Mensagem de alerta",
+    "description": "Descricao do alerta"
+  }
+}

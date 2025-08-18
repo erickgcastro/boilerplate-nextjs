@@ -1,0 +1,6 @@
+{
+  "alert": {
+    "title": "alert message",
+    "description": "Descritpion about alert message"
+  }
+}

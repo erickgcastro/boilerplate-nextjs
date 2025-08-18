@@ -1,0 +1,12 @@
+{
+  "example": {
+    "title": "Title",
+    "delete": {
+      "success": "Delete successful",
+      "error": "Error on delete"
+    }
+  },
+  "homePage": {
+    "button": "Toggle Theme"
+  }
+}
