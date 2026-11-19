@@ -14,23 +14,26 @@ export class Service {
     return `${defaultPath}${path}`;
   }
 
-  public static toFormData(data: Record<string, any>) {
+  public static toFormData(data: Record<string, unknown>) {
     const formData = new FormData();
 
     for (const key in data) {
-      if (data[key] instanceof FileList) {
-        for (let i = 0; i < data[key].length; i++) {
-          formData.append(key, data[key][i]);
+      const value = data[key];
+
+      if (value instanceof FileList) {
+        for (let i = 0; i < value.length; i++) {
+          formData.append(key, value[i]);
         }
         continue;
       }
 
       if (key === "utm") {
-        formData.append(key, JSON.stringify(data[key]));
+        formData.append(key, JSON.stringify(value));
         continue;
       }
 
-      formData.append(key, data[key]);
+      // String() matches what FormData already did with non-Blob values.
+      formData.append(key, value instanceof Blob ? value : String(value));
     }
 
     return formData;
@@ -43,19 +46,15 @@ export function Key<T extends typeof Service>(ctor: T, method: keyof T) {
   return `${prefix}:${method.toString()}`;
 }
 
-export function Resolve<A extends keyof T, T extends Service>(
+export function Resolve<T extends typeof Service, A extends keyof T>(
   ctor: T,
-  method: keyof T,
+  method: A,
 ): {
   key: string;
   service: T[A];
 } {
-  const prefix: string = (ctor as any).key || (ctor as any).name;
-
-  const x = ctor[method];
-
   return {
-    key: `${prefix}:${method.toString()}`,
-    service: x as T[A],
+    key: Key(ctor, method),
+    service: ctor[method],
   };
 }

@@ -13,7 +13,7 @@
       },
       "style": { "noNonNullAssertion": "off" },
       "suspicious": {
-        "noExplicitAny": "off",
+        "noExplicitAny": "error",
         "noNonNullAssertedOptionalChain": "off"
       }
     }

@@ -2,7 +2,7 @@
 
 import axios, { type CreateAxiosDefaults } from "axios";
 
-const axiosProps: CreateAxiosDefaults<any> = {
+const axiosProps: CreateAxiosDefaults = {
   withCredentials: true,
 };
 

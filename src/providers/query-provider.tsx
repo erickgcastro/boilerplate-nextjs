@@ -9,10 +9,15 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AxiosError } from "axios";
 import { useState } from "react";
-import { useRouter } from "@/i18n/navigation";
+
+// Full page load: /api has no locale prefix, and the logout route handler sets cookies and redirects.
+const logoutOnUnauthorized = (error: Error) => {
+  if (error instanceof AxiosError && error.response?.status === 401) {
+    window.location.assign("/api/logout?message=unauthorized");
+  }
+};
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -21,24 +26,8 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
             staleTime: 60 * 1000,
           },
         },
-        mutationCache: new MutationCache({
-          onError: (error) => {
-            if (error instanceof AxiosError) {
-              if (error.response?.status === 401) {
-                router.push("/api/logout?message=unauthorized");
-              }
-            }
-          },
-        }),
-        queryCache: new QueryCache({
-          onError: (error) => {
-            if (error instanceof AxiosError) {
-              if (error.response?.status === 401) {
-                router.push("/api/logout?message=unauthorized");
-              }
-            }
-          },
-        }),
+        mutationCache: new MutationCache({ onError: logoutOnUnauthorized }),
+        queryCache: new QueryCache({ onError: logoutOnUnauthorized }),
       }),
   );
 
