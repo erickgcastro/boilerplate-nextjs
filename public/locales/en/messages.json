@@ -1,7 +1,9 @@
 {
   "example": {
     "title": "Title",
+    "loading": "Loading...",
     "delete": {
+      "label": "Delete",
       "success": "Delete successful",
       "error": "Error on delete"
     }

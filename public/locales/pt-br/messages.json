@@ -1,7 +1,9 @@
 {
   "example": {
     "title": "Titulo",
+    "loading": "Carregando...",
     "delete": {
+      "label": "Excluir",
       "success": "Exclusão bem sucedida",
       "error": "Erro ao excluir"
     }

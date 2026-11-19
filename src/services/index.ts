@@ -37,22 +37,22 @@ export class Service {
   }
 }
 
-export function Key<T extends typeof Service>(constructor: T, method: keyof T) {
-  const prefix = constructor.key || constructor.name;
+export function Key<T extends typeof Service>(ctor: T, method: keyof T) {
+  const prefix = ctor.key || ctor.name;
 
   return `${prefix}:${method.toString()}`;
 }
 
 export function Resolve<A extends keyof T, T extends Service>(
-  constructor: T,
+  ctor: T,
   method: keyof T,
 ): {
   key: string;
   service: T[A];
 } {
-  const prefix: string = (constructor as any).key || (constructor as any).name;
+  const prefix: string = (ctor as any).key || (ctor as any).name;
 
-  const x = constructor[method];
+  const x = ctor[method];
 
   return {
     key: `${prefix}:${method.toString()}`,

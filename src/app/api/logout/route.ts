@@ -1,7 +1,7 @@
 "use server";
-import { AUTH_COOKIES } from "@/lib/constants/cookies";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { AUTH_COOKIES } from "@/lib/constants/cookies";
 
 export async function GET() {
   const cookieStore = await cookies();

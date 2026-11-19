@@ -7,8 +7,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
 import { AxiosError } from "axios";
+import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
