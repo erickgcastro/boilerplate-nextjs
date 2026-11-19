@@ -9,11 +9,11 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AxiosError } from "axios";
 import { useState } from "react";
+import { redirectToLogout } from "@/lib/stores/logout";
 
-// Full page load: /api has no locale prefix, and the logout route handler sets cookies and redirects.
 const logoutOnUnauthorized = (error: Error) => {
   if (error instanceof AxiosError && error.response?.status === 401) {
-    window.location.assign("/api/logout?message=unauthorized");
+    redirectToLogout("/api/logout?message=unauthorized");
   }
 };
 

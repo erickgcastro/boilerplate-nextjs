@@ -1,16 +1,18 @@
 # Módulos de domínio
 
-Cada domínio de negócio fica em `src/domain/<modulo>/`, sempre com as mesmas quatro pastas. Os exemplos abaixo usam um módulo `product`:
+Cada domínio de negócio fica em `src/domain/<modulo>/`, sempre com as mesmas três pastas. As chamadas HTTP de todos os domínios ficam juntas em `src/repository/`. Os exemplos abaixo usam um módulo `product`:
 
 ```
 src/domain/product/
 ├── entities/product.ts            # formato do dado que a API devolve
 ├── dto/create-product.dto.ts      # schema zod e tipo do que é enviado
 ├── dto/update-product.dto.ts
-├── http/product.service.ts        # chamadas HTTP
-├── http/index.ts                  # registro dos services do módulo
 ├── hooks/product.queries.ts       # hooks do React Query
 └── hooks/index.ts                 # reexporta os hooks
+
+src/repository/
+├── product.service.ts             # chamadas HTTP do recurso
+└── index.ts                       # registro de todos os services
 ```
 
 ## entities
@@ -40,7 +42,9 @@ export const createProductSchema = z.object({
 export type CreateProductDto = z.infer<typeof createProductSchema>;
 ```
 
-## http (services)
+## repository (services)
+
+`src/repository/` concentra todo o HTTP do projeto: um arquivo `<recurso>.service.ts` por recurso da API, e nenhuma outra pasta importa o `httpClient`.
 
 O service estende `Service` de `@/services` e define dois campos estáticos:
 
@@ -51,9 +55,9 @@ Cada método escolhe um `HttpMethods`, monta o caminho com `Service.endpoint(def
 
 ```ts
 import { httpClient } from "@/config/axios-client";
+import type { CreateProductDto } from "@/domain/product/dto/create-product.dto";
+import type { Product } from "@/domain/product/entities/product";
 import { HttpMethods, Service } from "@/services";
-import type { CreateProductDto } from "../dto/create-product.dto";
-import type { Product } from "../entities/product";
 
 export class ProductService extends Service {
   public static key = "@product";
@@ -77,17 +81,19 @@ export class ProductService extends Service {
 
 Para enviar multipart, use `Service.toFormData(obj)`. Ele expande `FileList` em vários campos e serializa a chave `utm` como JSON.
 
-O `http/index.ts` do módulo exporta uma classe `Service` que registra os services dele:
+`src/repository/index.ts` exporta uma classe `Service` que registra todos os services do projeto:
 
 ```ts
+import { OrderService } from "./order.service";
 import { ProductService } from "./product.service";
 
 export class Service {
+  static order = OrderService;
   static product = ProductService;
 }
 ```
 
-Ela tem o mesmo nome da classe base de `@/services`. Nos hooks, `Service` é sempre esse registro, importado de `../http`.
+Ela tem o mesmo nome da classe base de `@/services`. Nos hooks, `Service` é sempre esse registro, importado de `@/repository`.
 
 ## hooks
 
@@ -100,8 +106,8 @@ Ela tem o mesmo nome da classe base de `@/services`. Nos hooks, `Service` é sem
 ```ts
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Service } from "@/repository";
 import { Key } from "@/services";
-import { Service } from "../http";
 
 function useGetAllProducts() {
   return useQuery({
@@ -144,7 +150,7 @@ const { data, isLoading } = ProductQueries.useGetAllProducts();
 
 1. `src/domain/<modulo>/entities/<modulo>.ts` com a interface da resposta.
 2. Um DTO por operação de escrita em `dto/`.
-3. `http/<modulo>.service.ts` estendendo `Service`, com `key` e `defaultPath` próprios.
-4. Registrar o service em `http/index.ts`.
-5. `hooks/<modulo>.queries.ts` exportando `<Modulo>Queries`, reexportado em `hooks/index.ts`.
+3. `src/repository/<modulo>.service.ts` estendendo `Service`, com `key` e `defaultPath` próprios.
+4. Registrar o service em `src/repository/index.ts`.
+5. `src/domain/<modulo>/hooks/<modulo>.queries.ts` exportando `<Modulo>Queries`, reexportado em `hooks/index.ts`.
 6. Nos componentes, importar de `@/domain/<modulo>/hooks`.

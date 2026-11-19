@@ -1,4 +1,7 @@
 {
+  "auth": {
+    "loggingOut": "Saindo..."
+  },
   "example": {
     "title": "Titulo",
     "loading": "Carregando...",

@@ -1,8 +1,8 @@
 import { httpClient } from "@/config/axios-client";
+import type { CreateExampleDto } from "@/domain/example/dto/create-example.dto";
+import type { UpdateExampleDto } from "@/domain/example/dto/update-user.dto";
+import type { Example } from "@/domain/example/entities/example";
 import { HttpMethods, Service } from "@/services";
-import type { CreateExampleDto } from "../dto/create-example.dto";
-import type { UpdateExampleDto } from "../dto/update-user.dto";
-import type { Example } from "../entities/example";
 
 export class ExampleService extends Service {
   public static key = "@user";

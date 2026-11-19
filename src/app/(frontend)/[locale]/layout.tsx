@@ -4,6 +4,7 @@ import "../globals.css";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
+import { LogoutOverlay } from "@/components/logout-overlay";
 import { routing } from "@/i18n/routing";
 import { QueryProvider } from "@/providers/query-provider";
 
@@ -42,6 +43,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <ThemeProvider themes={["light", "dark"]}>
             <QueryProvider>{children}</QueryProvider>
+            <LogoutOverlay />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
