@@ -9,7 +9,7 @@
 Antes de escrever código:
 
 1. Leia os documentos de `docs/` ligados à tarefa. Página ou rota nova: [architecture.md](docs/architecture.md). Dado vindo da API: [domain.md](docs/domain.md). Texto na tela: [i18n.md](docs/i18n.md). Componente ou estilo: [ui.md](docs/ui.md).
-2. Procure o que já existe antes de criar: componentes em `src/components/ui/`, utilitários em `src/lib/`, stores em `src/lib/stores/`, services em `src/repository/` e hooks em `src/domain/`. Se o shadcn tiver o componente, adicione pela CLI em vez de escrever um.
+2. Procure o que já existe antes de criar: componentes em `src/components/ui/`, utilitários em `src/lib/`, stores em `src/lib/stores/`, services e hooks em `src/domain/`. Se o shadcn tiver o componente, adicione pela CLI em vez de escrever um.
 3. Liste tudo que a mudança precisa tocar: entity, DTO, service, hooks, componentes, página e as traduções de todos os locales.
 4. Se o pedido for ambíguo, ou se a tarefa exigir algo da seção 4 (dependência nova, mudança de configuração), pergunte antes de seguir.
 
@@ -17,9 +17,8 @@ Antes de escrever código:
 
 ## 2. Arquitetura
 
-- O fluxo de dados é sempre página/componente → hook do domínio → service de `src/repository/` → `httpClient`. Nunca chame axios ou o service direto de uma página ou componente.
-- Toda chamada HTTP fica em `src/repository/`, um `<recurso>.service.ts` por recurso, registrado em `src/repository/index.ts`.
-- Módulo de domínio novo segue a mesma estrutura de pastas dos existentes (`entities/`, `dto/`, `hooks/`).
+- O fluxo de dados é sempre página/componente → hook do domínio → service do domínio → `httpClient`. Nunca chame axios ou o service direto de uma página ou componente.
+- Módulo de domínio novo segue a mesma estrutura de pastas dos existentes (`entities/`, `dto/`, `http/`, `hooks/`).
 - Dado da API fica no React Query. Estado de cliente compartilhado fica em uma store zustand em `src/lib/stores/`.
 - Página nova fica em `src/app/(frontend)/[locale]/`; route handler, em `src/app/api/`.
 - Next 16: o middleware se chama `src/proxy.ts`, `params` e `cookies()` são Promises e `next lint` não existe.
@@ -36,7 +35,7 @@ Antes de escrever código:
 - Métodos de service declaram o tipo de retorno (`Promise<Product>`).
 - DTO é um schema zod com o tipo exportado via `z.infer`.
 - Função nova com mais de um parâmetro: prefira um objeto de parâmetros nomeados.
-- Importe pelo alias `@/*`, não por caminhos relativos que saem da pasta do módulo. Os services vêm de `@/repository`.
+- Importe pelo alias `@/*`, não por caminhos relativos que saem da pasta do módulo.
 
 ### Convenções
 

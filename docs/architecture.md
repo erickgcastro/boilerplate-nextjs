@@ -20,7 +20,6 @@ src/
 │   ├── hooks/                 # hooks de UI reutilizáveis (useDebouncedValue)
 │   └── stores/                # stores zustand de estado de cliente
 ├── providers/                 # providers React
-├── repository/                # todas as chamadas HTTP, um service por recurso
 ├── services/                  # classe base e helpers dos services HTTP
 └── proxy.ts                   # proxy do Next 16 (antigo middleware)
 public/locales/<locale>/       # arquivos de tradução
@@ -31,15 +30,13 @@ O alias `@/*` aponta para `src/*`.
 ## Camadas e fluxo de dados
 
 ```
-página / componente  →  hook do domínio (React Query)  →  service de repository  →  httpClient (axios)  →  API
+página / componente  →  hook do domínio (React Query)  →  service do domínio  →  httpClient (axios)  →  API
 ```
 
 - Página e componente não chamam axios nem o service direto: usam os hooks de `domain/<modulo>/hooks`.
 - O hook não monta URL: chama um método do service.
-- Toda chamada HTTP fica em `src/repository/`. Nenhuma outra pasta importa o `httpClient`.
 - O service não guarda estado: é uma classe só com métodos estáticos.
-- `domain/` importa de `repository/`, `services/` e `lib/`, nunca de `app/` ou `components/`.
-- `repository/` importa de `domain/` só os tipos (entities e DTOs).
+- `domain/` importa de `services/`, `config/` e `lib/`, nunca de `app/` ou `components/`.
 
 Detalhes de cada camada em [domain.md](domain.md).
 
